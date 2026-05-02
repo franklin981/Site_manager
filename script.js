@@ -1,12 +1,15 @@
 let sites = [];
 
+// Load sites from localStorage when page starts
 window.onload = function() {
   const savedSites = localStorage.getItem('sites');
   if (savedSites) {
     sites = JSON.parse(savedSites);
     renderSites();
-    restartAllGenerators(); // 🔥 restart after reload
+    restartAllGenerators(); // restart timers after reload
   }
+
+  // Attach event listener globally
   document.getElementById('addBtn').addEventListener('click', addSite);
 };
 
@@ -14,11 +17,42 @@ function saveSites() {
   localStorage.setItem('sites', JSON.stringify(sites));
 }
 
+function addSite() {
+  const name = document.getElementById('siteName').value.trim();
+  const fuel = parseFloat(document.getElementById('fuelLitres').value);
+  const rate = parseFloat(document.getElementById('consumptionRate').value);
+
+  if (!name || isNaN(fuel) || isNaN(rate)) {
+    alert("Please fill all fields correctly.");
+    return;
+  }
+
+  const site = {
+    name,
+    fuel,
+    rate,
+    remainingFuel: fuel,
+    running: true,
+    interval: null,
+    editing: false
+  };
+
+  sites.push(site);
+  saveSites();
+  renderSites();
+  startGenerator(sites.length - 1);
+
+  // Clear form
+  document.getElementById('siteName').value = '';
+  document.getElementById('fuelLitres').value = '';
+  document.getElementById('consumptionRate').value = '';
+}
+
 function renderSites() {
   const container = document.getElementById('siteContainer');
   container.innerHTML = '';
 
-  // 🔥 Clear all old intervals before re-render
+  // Clear old intervals before re-render
   sites.forEach(site => {
     if (site.interval) {
       clearInterval(site.interval);
@@ -59,7 +93,7 @@ function renderSites() {
     updateTimerDisplay(index);
   });
 
-  // 🔥 Restart all running generators after re-render
+  // Restart all running generators after re-render
   restartAllGenerators();
 }
 
@@ -95,7 +129,7 @@ function deleteSite(index) {
   clearInterval(sites[index].interval);
   sites.splice(index, 1);
   saveSites();
-  renderSites(); // 🔥 re-render and restart all
+  renderSites(); // re-render and restart all
 }
 
 function editSite(index) {
@@ -114,7 +148,7 @@ function saveEdit(index) {
 
   sites[index].editing = false;
   saveSites();
-  renderSites(); // 🔥 re-render and restart all
+  renderSites(); // re-render and restart all
 }
 
 function updateTimerDisplay(index) {
