@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Site Manager</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <header>
+    <h1>Network Site Manager</h1>
+  </header>
+
+  <div class="form-section">
+    <h2>Add New Site</h2>
+    <input type="text" id="siteName" placeholder="Site Name">
+    <input type="number" id="fuelLitres" placeholder="Fuel Litres">
+    <input type="number" id="consumptionRate" placeholder="Consumption (litres/hour)">
+    <button onclick="addSite()">Add Site</button>
+  </div>
+
+  <div class="container" id="siteContainer">
+    <!-- Site cards will appear here -->
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
